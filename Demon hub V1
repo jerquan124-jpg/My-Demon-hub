@@ -1,0 +1,241 @@
+-- Demon Hub | Main Loader
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+local function gradient(text, startColor, endColor)
+    local result = ""
+    local length = #text
+    for i = 1, length do
+        local t = (i - 1) / math.max(length - 1, 1)
+        local r = math.floor((startColor.R + ((endColor.R - startColor.R) * t)) * 255)
+        local g = math.floor((startColor.G + ((endColor.G - startColor.G) * t)) * 255)
+        local b = math.floor((startColor.B + ((endColor.B - startColor.B) * t)) * 255)
+        result = result .. '<font color="rgb(' .. r .. "," .. g .. "," .. b .. ')">' .. text:sub(i,i) .. "</font>"
+    end
+    return result
+end
+
+-- =====================
+-- WELCOME POPUP
+-- =====================
+local Confirmed = false
+WindUI:Popup({
+    Title = gradient("⚡ DEMON HUB ⚡", Color3.fromHex("#FFD700"), Color3.fromHex("#FF8C00")),
+    Icon = "zap",
+    Content = gradient("Welcome to Demon Hub. Enter your key to continue.", Color3.fromHex("#FFD700"), Color3.fromHex("#B8860B")),
+    Buttons = {
+        {
+            Title = gradient("Exit", Color3.fromHex("#ff0000"), Color3.fromHex("#630000")),
+            Callback = function() end,
+            Variant = "Tertiary"
+        },
+        {
+            Title = gradient("Continue", Color3.fromHex("#FFD700"), Color3.fromHex("#FF8C00")),
+            Callback = function()
+                Confirmed = true
+            end,
+            Variant = "Secondary"
+        }
+    }
+})
+repeat task.wait() until Confirmed
+
+-- =====================
+-- KEY SYSTEM
+-- =====================
+local VALID_KEYS = {
+    "DEMON-KEY-0001",
+    "DEMON-KEY-0002",
+    -- Add more keys here
+}
+
+local keyInput = ""
+local keyConfirmed = false
+
+local KeyWindow = WindUI:CreateWindow({
+    Title = gradient("⚡ DEMON HUB | KEY SYSTEM", Color3.fromHex("#FFD700"), Color3.fromHex("#FF8C00")),
+    Icon = "key",
+    Size = UDim2.fromOffset(320, 180),
+    Theme = "Dark",
+    Transparent = true,
+    HasOutline = true,
+    UserEnabled = false,
+})
+
+local KeyTab = KeyWindow:Tab({
+    Title = gradient("KEY", Color3.fromHex("#FFD700"), Color3.fromHex("#B8860B")),
+    Icon = "key"
+})
+
+KeyTab:Section({
+    Title = gradient("Enter your Demon Hub key below", Color3.fromHex("#FFD700"), Color3.fromHex("#B8860B"))
+})
+
+KeyTab:Input({
+    Title = gradient("Key", Color3.fromHex("#FFD700"), Color3.fromHex("#B8860B")),
+    PlaceholderText = "DEMON-KEY-XXXX",
+    Callback = function(text)
+        keyInput = text
+    end
+})
+
+KeyTab:Button({
+    Title = gradient("✔ Submit Key", Color3.fromHex("#FFD700"), Color3.fromHex("#FF8C00")),
+    Callback = function()
+        local valid = false
+        for _, key in ipairs(VALID_KEYS) do
+            if keyInput == key then
+                valid = true
+                break
+            end
+        end
+
+        if valid then
+            keyConfirmed = true
+            WindUI:Notify({
+                Title = gradient("⚡ DEMON HUB", Color3.fromHex("#FFD700"), Color3.fromHex("#FF8C00")),
+                Content = "✔ Key accepted! Detecting game...",
+                Icon = "check-circle",
+                Duration = 3
+            })
+            KeyWindow:Destroy()
+        else
+            WindUI:Notify({
+                Title = gradient("⚡ DEMON HUB", Color3.fromHex("#FFD700"), Color3.fromHex("#FF8C00")),
+                Content = "✘ Invalid key! Try again.",
+                Icon = "x-circle",
+                Duration = 3
+            })
+        end
+    end
+})
+
+repeat task.wait() until keyConfirmed
+
+-- =====================
+-- GAME DETECTION
+-- =====================
+local games = {
+    -- ===== ACTIVE GAMES =====
+    [142823291]   = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/MM2",
+    [18687417158] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Forsaken",
+
+    -- ===== ADD MORE GAMES BELOW =====
+    -- [GAME_ID] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/SCRIPTNAME",
+    -- [0000000003] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game3",
+    -- [0000000004] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game4",
+    -- [0000000005] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game5",
+    -- [0000000006] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game6",
+    -- [0000000007] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game7",
+    -- [0000000008] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game8",
+    -- [0000000009] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game9",
+    -- [0000000010] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game10",
+    -- [0000000011] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game11",
+    -- [0000000012] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game12",
+    -- [0000000013] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game13",
+    -- [0000000014] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game14",
+    -- [0000000015] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game15",
+    -- [0000000016] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game16",
+    -- [0000000017] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game17",
+    -- [0000000018] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game18",
+    -- [0000000019] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game19",
+    -- [0000000020] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game20",
+    -- [0000000021] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game21",
+    -- [0000000022] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game22",
+    -- [0000000023] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game23",
+    -- [0000000024] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game24",
+    -- [0000000025] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game25",
+    -- [0000000026] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game26",
+    -- [0000000027] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game27",
+    -- [0000000028] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game28",
+    -- [0000000029] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game29",
+    -- [0000000030] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game30",
+    -- [0000000031] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game31",
+    -- [0000000032] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game32",
+    -- [0000000033] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game33",
+    -- [0000000034] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game34",
+    -- [0000000035] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game35",
+    -- [0000000036] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game36",
+    -- [0000000037] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game37",
+    -- [0000000038] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game38",
+    -- [0000000039] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game39",
+    -- [0000000040] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game40",
+    -- [0000000041] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game41",
+    -- [0000000042] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game42",
+    -- [0000000043] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game43",
+    -- [0000000044] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game44",
+    -- [0000000045] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game45",
+    -- [0000000046] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game46",
+    -- [0000000047] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game47",
+    -- [0000000048] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game48",
+    -- [0000000049] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game49",
+    -- [0000000050] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game50",
+    -- [0000000051] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game51",
+    -- [0000000052] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game52",
+    -- [0000000053] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game53",
+    -- [0000000054] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game54",
+    -- [0000000055] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game55",
+    -- [0000000056] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game56",
+    -- [0000000057] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game57",
+    -- [0000000058] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game58",
+    -- [0000000059] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game59",
+    -- [0000000060] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game60",
+    -- [0000000061] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game61",
+    -- [0000000062] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game62",
+    -- [0000000063] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game63",
+    -- [0000000064] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game64",
+    -- [0000000065] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game65",
+    -- [0000000066] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game66",
+    -- [0000000067] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game67",
+    -- [0000000068] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game68",
+    -- [0000000069] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game69",
+    -- [0000000070] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game70",
+    -- [0000000071] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game71",
+    -- [0000000072] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game72",
+    -- [0000000073] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game73",
+    -- [0000000074] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game74",
+    -- [0000000075] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game75",
+    -- [0000000076] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game76",
+    -- [0000000077] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game77",
+    -- [0000000078] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game78",
+    -- [0000000079] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game79",
+    -- [0000000080] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game80",
+    -- [0000000081] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game81",
+    -- [0000000082] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game82",
+    -- [0000000083] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game83",
+    -- [0000000084] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game84",
+    -- [0000000085] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game85",
+    -- [0000000086] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game86",
+    -- [0000000087] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game87",
+    -- [0000000088] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game88",
+    -- [0000000089] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game89",
+    -- [0000000090] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game90",
+    -- [0000000091] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game91",
+    -- [0000000092] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game92",
+    -- [0000000093] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game93",
+    -- [0000000094] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game94",
+    -- [0000000095] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game95",
+    -- [0000000096] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game96",
+    -- [0000000097] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game97",
+    -- [0000000098] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game98",
+    -- [0000000099] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game99",
+    -- [0000000100] = "https://raw.githubusercontent.com/jerquan124-jpg/Demon-hub/refs/heads/main/Game100",
+}
+
+local scriptURL = games[game.PlaceId]
+
+if scriptURL then
+    WindUI:Notify({
+        Title = gradient("⚡ DEMON HUB", Color3.fromHex("#FFD700"), Color3.fromHex("#FF8C00")),
+        Content = "✔ Game detected! Executing script...",
+        Icon = "check-circle",
+        Duration = 3
+    })
+    loadstring(game:HttpGet(scriptURL))()
+else
+    WindUI:Notify({
+        Title = gradient("⚡ DEMON HUB", Color3.fromHex("#FFD700"), Color3.fromHex("#FF8C00")),
+        Content = "✘ This game is not supported yet!",
+        Icon = "x-circle",
+        Duration = 5
+    })
+end
